@@ -1,0 +1,3017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anywhere Door - Your Portal to Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0; /* Add this line */
+    width: 100%;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 219, 222, 0.3);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: #00dbde;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        /* Welcome Popup */
+        .welcome-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+        
+        .welcome-popup.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .welcome-content {
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .welcome-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 219, 222, 0.5);
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+        
+        .enter-btn {
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 219, 222, 0.5);
+        }
+        
+        .enter-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 219, 222, 0.8);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: #ccc;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Anywhere Door */
+        .door-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 50px auto;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+        
+        .door-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .door {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+        }
+        
+        .door.open {
+            transform: rotateY(180deg);
+        }
+        
+        .door-front, .door-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(0, 219, 222, 0.5);
+            border: 5px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .door-front {
+            background: radial-gradient(circle, rgba(0,219,222,0.2) 0%, rgba(252,0,255,0.2) 100%);
+            transform: rotateY(0deg);
+        }
+        
+        .door-back {
+            background: radial-gradient(circle, rgba(252,0,255,0.2) 0%, rgba(0,219,222,0.2) 100%);
+            transform: rotateY(180deg);
+        }
+        
+        .door-circle {
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .door-text {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 219, 222, 0.8);
+            z-index: 10;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0, 219, 222, 0.8); }
+            to { text-shadow: 0 0 20px rgba(252, 0, 255, 0.8), 0 0 30px rgba(0, 219, 222, 0.8); }
+        }
+        
+        .door-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(10px, 10px); }
+            50% { transform: translate(-10px, 10px); }
+            75% { transform: translate(-10px, -10px); }
+        }
+        
+        /* Destination Grid */
+        .destinations-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .destinations-grid.visible {
+            display: grid;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .destination-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 219, 222, 0.3);
+            border: 1px solid rgba(0, 219, 222, 0.5);
+        }
+        
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .destination-info {
+            padding: 20px;
+        }
+        
+        .destination-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #00dbde;
+        }
+        
+        .destination-description {
+            color: #ccc;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .destination-tag {
+            display: inline-block;
+            background: rgba(0, 219, 222, 0.2);
+            color: #00dbde;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        /* Destination Details */
+        .destination-details {
+            display: none;
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .destination-details.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(0, 219, 222, 0.5);
+        }
+        
+        .back-button i {
+            margin-right: 5px;
+        }
+        
+        .detail-header {
+            display: flex;
+            margin-bottom: 30px;
+            gap: 30px;
+        }
+        
+        .detail-image {
+            width: 50%;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .detail-info {
+            width: 50%;
+        }
+        
+        .detail-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #00dbde;
+        }
+        
+        .detail-location {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        .detail-location i {
+            margin-right: 10px;
+            color: #fc00ff;
+        }
+        
+        .detail-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .detail-highlights {
+            margin-bottom: 30px;
+        }
+        
+        .highlight-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fc00ff;
+        }
+        
+        .highlight-list {
+            list-style: none;
+        }
+        
+        .highlight-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .highlight-list li::before {
+            content: '✓';
+            color: #00dbde;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        /* Tabs */
+        .detail-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            color: #ccc;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button.active {
+            color: #00dbde;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Attractions */
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .attraction-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .attraction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.2);
+        }
+        
+        .attraction-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .attraction-info {
+            padding: 15px;
+        }
+        
+        .attraction-name {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .attraction-description {
+            color: #ccc;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .attraction-price {
+            color: #00dbde;
+            font-weight: bold;
+        }
+        
+        /* Restaurants */
+        .restaurant-card {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.2);
+        }
+        
+        .restaurant-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .restaurant-info {
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .restaurant-name {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .restaurant-cuisine {
+            color: #fc00ff;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .restaurant-price {
+            color: #00dbde;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            color: gold;
+            font-size: 0.9rem;
+        }
+        
+        /* Hotels */
+        .hotel-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.2);
+        }
+        
+        .hotel-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .hotel-info {
+            padding: 15px;
+        }
+        
+        .hotel-name {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .hotel-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .amenity {
+            background: rgba(0, 219, 222, 0.1);
+            color: #00dbde;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+        }
+        
+        .hotel-price {
+            color: #fc00ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .book-button {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .book-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 219, 222, 0.3);
+        }
+        
+        /* Itinerary Planner */
+        .planner-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .planner-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #fc00ff;
+        }
+        
+        .planner-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #00dbde;
+        }
+        
+        .generate-button {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .generate-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.3);
+        }
+        
+        .itinerary-result {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .itinerary-result.visible {
+            display: block;
+        }
+        
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .itinerary-title {
+            font-size: 1.5rem;
+            color: #00dbde;
+        }
+        
+        .itinerary-cost {
+            font-size: 1.2rem;
+            color: #fc00ff;
+            font-weight: bold;
+        }
+        
+        .day-plan {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .day-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .activity {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .activity-time {
+            width: 80px;
+            color: #00dbde;
+            font-weight: bold;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .activity-description {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Reviews */
+        .reviews-container {
+            margin-top: 30px;
+        }
+        
+        .review-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .review-author {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .review-rating {
+            color: gold;
+        }
+        
+        .review-date {
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+        
+        .review-content {
+            color: #ccc;
+            line-height: 1.5;
+        }
+        
+        .add-review {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .review-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #fc00ff;
+        }
+        
+        .review-form .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .review-textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            min-height: 100px;
+        }
+        
+        .submit-review {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-review:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 219, 222, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 50px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #00dbde;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Easter Egg */
+        .easter-egg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .easter-egg:hover {
+            background: rgba(0, 219, 222, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .egg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .egg-modal.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .egg-content {
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(0, 219, 222, 0.3);
+            box-shadow: 0 0 30px rgba(0, 219, 222, 0.3);
+        }
+        
+        .egg-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .egg-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fc00ff;
+        }
+        
+        .egg-text {
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .door-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .detail-header {
+                flex-direction: column;
+            }
+            
+            .detail-image, .detail-info {
+                width: 100%;
+            }
+            
+            .detail-title {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+        }
+        
+        /* Animations */
+        @keyframes floatUp {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .float-up {
+            animation: floatUp 1s ease forwards;
+        }
+        
+        /* Sound Control */
+        .sound-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sound-control i {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        /* Weather Widget */
+        .weather-widget {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+        
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .weather-title {
+            font-size: 0.9rem;
+            color: #00dbde;
+        }
+        
+        .weather-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .weather-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .weather-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: #fc00ff;
+        }
+        
+        .weather-temp {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .weather-details {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .weather-details div {
+            margin-bottom: 3px;
+        }
+        
+        /* Quiz */
+        .quiz-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        
+        .quiz-container.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #fc00ff;
+        }
+        
+        .quiz-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .quiz-question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background: rgba(0, 219, 222, 0.3);
+        }
+        
+        .quiz-option.correct {
+            background: rgba(0, 255, 0, 0.3);
+            border: 1px solid green;
+        }
+        
+        .quiz-option.incorrect {
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid red;
+        }
+        
+        .quiz-next {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 219, 222, 0.3);
+        }
+        
+        .quiz-result {
+            text-align: center;
+            display: none;
+        }
+        
+        .result-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fc00ff;
+        }
+        
+        .result-score {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .result-text {
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .quiz-restart {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 219, 222, 0.3);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Welcome Popup -->
+    <div class="welcome-popup" id="welcomePopup">
+        <div class="welcome-content">
+            <h1 class="welcome-title">ANYWHERE DOOR</h1>
+            <p class="welcome-subtitle">Your portal to incredible destinations across India</p>
+            <button class="enter-btn" id="enterBtn">OPEN THE DOOR</button>
+        </div>
+        <audio id="welcomeSound" src="https://cdn.pixabay.com/audio/2022/03/20/audio_deac4a17a9.mp3" autoplay></audio>
+    </div>
+
+    <!-- Main Website -->
+    <div class="main-content" id="mainContent" style="display: none;">
+        <header>
+            <div class="logo">ANYWHERE DOOR</div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="homeLink">Home</a></li>
+                    <li><a href="#" id="destinationsLink">Destinations</a></li>
+                    <li><a href="#" id="plannerLink">Itinerary Planner</a></li>
+                    <li><a href="#" id="quizLink">Travel Quiz</a></li>
+                    <li><a href="#" id="weatherLink">Weather</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="hero-section" id="homeSection">
+            <h1 class="hero-title">Discover India Like Never Before</h1>
+            <p class="hero-subtitle">Step through the Anywhere Door to explore breathtaking destinations, curated experiences, and personalized travel plans tailored just for you.</p>
+            
+            <!-- Anywhere Door -->
+            <div class="door-container" id="doorContainer">
+                <div class="door" id="door">
+                    <div class="door-front">
+                        <div class="door-circle">
+                            <div class="door-text">CLICK TO OPEN</div>
+                            <div class="door-particles" id="doorParticles"></div>
+                        </div>
+                    </div>
+                    <div class="door-back">
+                        <div class="door-circle">
+                            <div class="door-text">CHOOSE A DESTINATION</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <audio id="doorSound" src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-55112/zapsplat_science_fiction_door_code_unlock_001_61685.mp3"></audio>
+        </div>
+
+        <!-- Destinations Grid -->
+        <div class="destinations-grid" id="destinationsGrid">
+            <!-- Destinations will be added here by JavaScript -->
+        </div>
+
+        <!-- Destination Details -->
+        <div class="destination-details" id="destinationDetails">
+            <!-- Details will be loaded here by JavaScript -->
+        </div>
+
+        <!-- Itinerary Planner -->
+        <div class="planner-container" id="plannerSection" style="display: none;">
+            <h2 class="planner-title">Plan Your Perfect Trip</h2>
+            <div class="planner-form">
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-input" id="startDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-input" id="endDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <select class="form-select" id="budgetRange">
+                        <option value="economy">Economy (₹5,000 - ₹15,000)</option>
+                        <option value="mid-range">Mid-Range (₹15,000 - ₹30,000)</option>
+                        <option value="luxury">Luxury (₹30,000+)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Travel Type</label>
+                    <select class="form-select" id="travelType">
+                        <option value="solo">Solo</option>
+                        <option value="couple">Couple</option>
+                        <option value="family">Family</option>
+                        <option value="friends">Friends</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Destinations (Select Multiple)</label>
+                    <select class="form-select" id="destinationsSelect" multiple>
+                        <option value="agra">Agra</option>
+                        <option value="goa">Goa</option>
+                        <option value="jaipur">Jaipur</option>
+                        <option value="varanasi">Varanasi</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="shimla">Shimla</option>
+                        <option value="darjeeling">Darjeeling</option>
+                    </select>
+                </div>
+            </div>
+            <button class="generate-button" id="generateItinerary">GENERATE ITINERARY</button>
+            
+            <div class="itinerary-result" id="itineraryResult">
+                <!-- Itinerary will be generated here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-logo">ANYWHERE DOOR</div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="copyright">© 2023 Anywhere Door. All rights reserved.</p>
+        </footer>
+
+        <!-- Sound Control -->
+        <div class="sound-control" id="soundControl">
+            <i class="fas fa-volume-up"></i>
+        </div>
+
+        <!-- Weather Widget -->
+        <div class="weather-widget" id="weatherWidget">
+            <div class="weather-header">
+                <div class="weather-title">WEATHER</div>
+                <button class="weather-close" id="weatherClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="weather-info">
+                <div class="weather-icon"><i class="fas fa-sun"></i></div>
+                <div class="weather-temp">28°C</div>
+            </div>
+            <div class="weather-details">
+                <div>Humidity: 65%</div>
+                <div>Wind: 12 km/h</div>
+                <div>Sunny</div>
+            </div>
+        </div>
+
+        <!-- Easter Egg -->
+        <div class="easter-egg" id="easterEgg">
+            <i class="fas fa-question"></i>
+        </div>
+
+        <div class="egg-modal" id="eggModal">
+            <div class="egg-content">
+                <button class="egg-close" id="eggClose"><i class="fas fa-times"></i></button>
+                <h2 class="egg-title">Travel Tip!</h2>
+                <p class="egg-text">Did you know? The best time to visit most Indian destinations is between October and March when the weather is pleasant. Avoid peak summer months for a more comfortable experience!</p>
+                <audio id="eggSound" src=file:///C:/Users/Dell/Downloads/egg-crack12-104558.mp3></audio>
+            </div>
+        </div>
+
+        <!-- Quiz Modal -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-header">
+                <h2 class="quiz-title">Travel Quiz</h2>
+                <button class="quiz-close" id="quizClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="quiz-content" id="quizContent">
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <button class="quiz-next" id="quizNext">Next Question</button>
+            </div>
+            <div class="quiz-result" id="quizResult">
+                <h2 class="result-title">Quiz Completed!</h2>
+                <div class="result-score" id="resultScore"></div>
+                <p class="result-text" id="resultText"></p>
+                <button class="quiz-restart" id="quizRestart">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Audio -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-relaxing-meditation-ambient-1746.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Destination Sounds -->
+    <audio id="agraSound" src="https://assets.mixkit.co/active_storage/sfx/17/17-preview.mp3" loop></audio>
+    <audio id="goaSound" src="https://assets.mixkit.co/active_storage/sfx/1208/1208-preview.mp3" loop></audio>
+    <audio id="jaipurSound" src="https://assets.mixkit.co/active_storage/sfx/1210/1210-preview.mp3" loop></audio>
+    <audio id="varanasiSound" src="https://dl.prokerala.com/downloads/ringtones/files/mp3/temple-bell-2426.mp3" loop></audio>
+    <audio id="mumbaiSound" src="https://assets.mixkit.co/active_storage/sfx/1210/1210-preview.mp3" loop></audio>
+    <audio id="keralaSound" src="https://assets.mixkit.co/active_storage/sfx/1210/1210-preview.mp3" loop></audio>
+    <audio id="shimlaSound" src="https://assets.mixkit.co/active_storage/sfx/17/17-preview.mp3" loop></audio>
+    <audio id="darjeelingSound" src="https://assets.mixkit.co/active_storage/sfx/17/17-preview.mp3" loop></audio>
+
+    <script>
+        // DOM Elements
+        const welcomePopup = document.getElementById('welcomePopup');
+        const enterBtn = document.getElementById('enterBtn');
+        const mainContent = document.getElementById('mainContent');
+        const doorContainer = document.getElementById('doorContainer');
+        const door = document.getElementById('door');
+        const doorParticles = document.getElementById('doorParticles');
+        const destinationsGrid = document.getElementById('destinationsGrid');
+        const destinationDetails = document.getElementById('destinationDetails');
+        const homeLink = document.getElementById('homeLink');
+        const destinationsLink = document.getElementById('destinationsLink');
+        const homeSection = document.getElementById('homeSection');
+        const plannerLink = document.getElementById('plannerLink');
+        const plannerSection = document.getElementById('plannerSection');
+        const quizLink = document.getElementById('quizLink');
+        const weatherLink = document.getElementById('weatherLink');
+        const weatherWidget = document.getElementById('weatherWidget');
+        const weatherClose = document.getElementById('weatherClose');
+        const soundControl = document.getElementById('soundControl');
+        const easterEgg = document.getElementById('easterEgg');
+        const eggModal = document.getElementById('eggModal');
+        const eggClose = document.getElementById('eggClose');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizClose = document.getElementById('quizClose');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizNext = document.getElementById('quizNext');
+        const quizContent = document.getElementById('quizContent');
+        const quizResult = document.getElementById('quizResult');
+        const resultScore = document.getElementById('resultScore');
+        const resultText = document.getElementById('resultText');
+        const quizRestart = document.getElementById('quizRestart');
+        
+        // Audio Elements
+        const welcomeSound = document.getElementById('welcomeSound');
+        const doorSound = document.getElementById('doorSound');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const agraSound = document.getElementById('agraSound');
+        const goaSound = document.getElementById('goaSound');
+        const jaipurSound = document.getElementById('jaipurSound');
+        const varanasiSound = document.getElementById('varanasiSound');
+        const mumbaiSound = document.getElementById('mumbaiSound');
+        const keralaSound = document.getElementById('keralaSound');
+        const shimlaSound = document.getElementById('shimlaSound');
+        const darjeelingSound = document.getElementById('darjeelingSound');
+        const eggSound = document.getElementById('eggSound');
+        
+        // Sound state
+        let isSoundOn = true;
+        
+        // Destination data
+        const destinations = [
+            {
+                id: 'agra',
+                name: 'Agra',
+                image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Home to the iconic Taj Mahal, one of the Seven Wonders of the World.',
+                tags: ['Historical', 'UNESCO', 'Romantic'],
+                details: {
+                    description: 'Agra is a city in northern India, known for the iconic Taj Mahal, a stunning white marble mausoleum built by Mughal emperor Shah Jahan in memory of his beloved wife Mumtaz Mahal. The city is part of the Golden Triangle tourist circuit, along with Delhi and Jaipur.',
+                    location: 'Uttar Pradesh, India',
+                    highlights: [
+                        'Visit the magnificent Taj Mahal at sunrise',
+                        'Explore the Agra Fort, a UNESCO World Heritage Site',
+                        'See the beautiful Tomb of Itimad-ud-Daulah (Baby Taj)',
+                        'Visit Mehtab Bagh for the best views of the Taj Mahal',
+                        'Shop for marble handicrafts and leather goods'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Taj Mahal',
+                            image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                            description: 'An ivory-white marble mausoleum on the south bank of the Yamuna river.',
+                            price: '₹1,100 (foreigners), ₹50 (Indians)'
+                        },
+                        {
+                            name: 'Agra Fort',
+                            image: 'https://media.istockphoto.com/id/486164299/photo/red-fort-agra-india.jpg?s=612x612&w=0&k=20&c=a_mDrASXCiQ_z-UclK3hwwk9R-qEgxwSRfy8tSJclHA=',
+                            description: 'A historical fort in the city that served as the main residence of the Mughal emperors.',
+                            price: '₹550 (foreigners), ₹40 (Indians)'
+                        },
+                        {
+                            name: 'Fatehpur Sikri',
+                            image: 'https://t4.ftcdn.net/jpg/02/44/89/53/360_F_244895310_zz2VRWJNIwehcGRdk3PEJUqaZzc1tr9j.jpg',
+                            description: 'A fortified city that served as the Mughal capital for about 10 years.',
+                            price: '₹510 (foreigners), ₹35 (Indians)'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Peshawri',
+                            image: 'https://content.jdmagicbox.com/comp/agra/14/0562p562std14/catalogue/peshawri-itc-mughal--taj-ganj-agra-restaurants-embx9.jpg?w=3840&q=75',
+                            cuisine: 'North Indian, Mughlai',
+                            price: '₹1,500 for two',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Dasaprakash',
+                            image: 'https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2021/03/Dasaprakash-Restaurant-Agra.jpg?resize=1200,799&ssl=1',
+                            cuisine: 'South Indian, Chinese',
+                            price: '₹800 for two',
+                            rating: '4.2'
+                        },
+                        {
+                            name: 'Joney\'s Place',
+                            image: 'https://img.restaurantguru.com/c2c8-Restaurant-Joneys-Place-picture.jpg',
+                            cuisine: 'Continental, Italian',
+                            price: '₹1,000 for two',
+                            rating: '4.3'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'The Oberoi Amarvilas',
+                            image: 'https://content.jdmagicbox.com/comp/agra/37/0562p562std3137/catalogue/the-oberoi-amarvilas-hotel-agra-ho-agra-5-star-hotels-3c1eico.jpg?w=3840&q=75',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', 'Restaurant'],
+                            price: '₹35,000 per night',
+                            rating: '5.0'
+                        },
+                        {
+                            name: 'ITC Mughal',
+                            image: 'https://content.jdmagicbox.com/comp/agra/34/0562p562std34/catalogue/itc-mughal-taj-ganj-agra-5-star-hotels-2jcib3dqtk.jpg?w=3840&q=75',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', 'Gym'],
+                            price: '₹12,000 per night',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Hotel Taj Resorts',
+                            image: 'https://www.journeyera.com/wp-content/uploads/2020/05/best-hotels-in-agra-near-taj-mahal-with-view-47406152.jpg',
+                            amenities: ['Free WiFi', 'Restaurant', 'AC'],
+                            price: '₹5,000 per night',
+                            rating: '4.0'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Rahul Sharma',
+                            rating: '5',
+                            date: '15 Jan 2023',
+                            content: 'The Taj Mahal is even more beautiful in person than in pictures. A must-visit for everyone!'
+                        },
+                        {
+                            author: 'Priya Patel',
+                            rating: '4',
+                            date: '22 Feb 2023',
+                            content: 'Agra is full of history and culture. The food was amazing, especially the Mughlai cuisine.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'goa',
+                name: 'Goa',
+                image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Famous for its beaches, nightlife, and Portuguese heritage.',
+                tags: ['Beaches', 'Nightlife', 'Relaxing'],
+                details: {
+                    description: 'Goa is a state in western India with coastlines stretching along the Arabian Sea. Known for its beaches, ranging from popular stretches at Baga and Palolem to isolated fishing villages like Agonda. Goa is also known for its Portuguese heritage, evident in its Baroque churches and crumbling forts. Goa\'s late-night beach parties and vibrant carnival celebrations attract hundreds of thousands of visitors each year.',
+                    location: 'West India',
+                    highlights: [
+                        'Relax on beautiful beaches like Palolem and Anjuna',
+                        'Experience the vibrant nightlife at beach clubs',
+                        'Explore Old Goa\'s Portuguese-era churches',
+                        'Try water sports like parasailing and jet skiing',
+                        'Enjoy fresh seafood and local feni liquor'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Palolem Beach',
+                            image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                            description: 'A scenic crescent-shaped beach in South Goa known for its calm waters.',
+                            price: 'Free'
+                        },
+                        {
+                            name: 'Basilica of Bom Jesus',
+                            image: 'https://cdn1.tripoto.com/media/filter/tst/img/1/SpotDocument/basilica_of_bom_jesus_goa.jpg.webp',
+                            description: 'A UNESCO World Heritage Site that contains the tomb of St. Francis Xavier.',
+                            price: 'Free (donations accepted)'
+                        },
+                        {
+                            name: 'Dudhsagar Falls',
+                            image: 'https://i.pinimg.com/originals/3c/83/0f/3c830fa7f3809b3811b02fe0cc8a4d81.jpg',
+                            description: 'A spectacular four-tiered waterfall located in the Bhagwan Mahavir Wildlife Sanctuary.',
+                            price: '₹50 per person'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Pousada by the Beach',
+                            image: 'https://content.jdmagicbox.com/comp/goa/u8/0832px832.x832.160517174026.j3u8/catalogue/pousada-by-the-beach-calangute-goa-continental-restaurants-y9n7wue1hy.jpg?w=3840&q=75',
+                            cuisine: 'Goan, Seafood',
+                            price: '₹1,800 for two',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Gunpowder',
+                            image: 'https://content.jdmagicbox.com/comp/goa/u7/0832px832.x832.130625102637.i8u7/catalogue/gunpowder-restaurant-assagaon-goa-ur2s5ey0pq.jpg?w=3840&q=75',
+                            cuisine: 'South Indian, Asian',
+                            price: '₹1,200 for two',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Fisherman\'s Wharf',
+                            image: 'https://hblimg.mmtcdn.com/content/hubble/img/goa/mmt/activities/m_activities_goa_the_fisherman_s_wharf_l_427_640.jpg',
+                            cuisine: 'Goan, Continental',
+                            price: '₹1,500 for two',
+                            rating: '4.3'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Taj Exotica Resort & Spa',
+                            image: 'https://www.kayak.com/rimg/himg/92/3c/40/expedia_group-31252-47412550-465975.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Private Beach', 'Spa', 'Free WiFi', '3 Restaurants'],
+                            price: '₹25,000 per night',
+                            rating: '4.8'
+                        },
+                        {
+                            name: 'The Leela Goa',
+                            image: 'https://www.fivestaralliance.com/files/fivestaralliance.com/field/image/nodes/2009/11416/11416_0_theleelahotelgoa_fsa-g.jpg',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', 'Gym', 'Beach Access'],
+                            price: '₹18,000 per night',
+                            rating: '4.6'
+                        },
+                        {
+                            name: 'Hotel Sea Princess',
+                            image: 'https://www.getyourvenue.com/uploads/venue-images/1413/venueimage2.jpg',
+                            amenities: ['Pool', 'Free WiFi', 'Restaurant', 'Beach Access'],
+                            price: '₹8,000 per night',
+                            rating: '4.2'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Neha Gupta',
+                            rating: '5',
+                            date: '10 Mar 2023',
+                            content: 'Goa is paradise! The beaches are amazing and the nightlife is incredible. Can\'t wait to go back!'
+                        },
+                        {
+                            author: 'Arjun Mehta',
+                            rating: '4',
+                            date: '28 Feb 2023',
+                            content: 'Great mix of relaxation and party. The seafood is to die for. Only downside was the crowds in peak season.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'jaipur',
+                name: 'Jaipur',
+                image: 'https://t3.ftcdn.net/jpg/10/33/78/98/360_F_1033789876_7R1mesjDdZwX5wLZ7MrrCJYoOVyBEVgf.jpg',
+                description: 'The Pink City known for its palaces and vibrant culture.',
+                tags: ['Historical', 'Royal', 'Shopping'],
+                details: {
+                    description: 'Jaipur is the capital of India\'s Rajasthan state, part of the Golden Triangle tourist circuit with Delhi and Agra. It\'s known as the "Pink City" for the distinctive color of its buildings. Jaipur is famous for its majestic palaces, historic forts, and vibrant bazaars selling textiles, jewelry, and handicrafts. The city offers a rich cultural experience with its traditional music, dance, and cuisine.',
+                    location: 'Rajasthan, India',
+                    highlights: [
+                        'Visit the magnificent Amber Fort',
+                        'Explore the City Palace and Hawa Mahal',
+                        'Shop for handicrafts at Johari Bazaar',
+                        'Experience traditional Rajasthani cuisine',
+                        'See the Jantar Mantar astronomical observatory'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Amber Fort',
+                            image: 'https://media.gettyimages.com/photos/amber-fort-jaipur-india-picture-id154894958?k=20&m=154894958&s=612x612&w=0&h=MNiD4fJ7cdCReTvrNz5K0GqArTpAnRxxTYT59sbA8L0=',
+                            description: 'A majestic fort overlooking Maota Lake, known for its artistic Hindu style elements.',
+                            price: '₹500 (foreigners), ₹100 (Indians)'
+                        },
+                        {
+                            name: 'Hawa Mahal',
+                            image: 'https://www.tripsavvy.com/thmb/0HGQXifrUIn0HJVvSu_TomFSEE4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-507311190-5ae34c6e0e23d90039a57d00.jpg',
+                            description: 'The "Palace of Winds" with a unique five-story exterior resembling a honeycomb.',
+                            price: '₹200 (foreigners), ₹50 (Indians)'
+                        },
+                        {
+                            name: 'City Palace',
+                            image: 'https://media.istockphoto.com/id/1744747131/photo/city-palace-jaipur-india.jpg?s=612x612&w=0&k=20&c=c9wj394FaZJyDw15IuzwHjzWDnExPik5zTvXGCaBOmY=',
+                            description: 'A palace complex that includes the Chandra Mahal and Mubarak Mahal palaces.',
+                            price: '₹700 (foreigners), ₹150 (Indians)'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: '1135 AD',
+                            image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/24/fe/a0/getlstd-property-photo.jpg?w=700&h=-1&s=1',
+                            cuisine: 'Rajasthani, North Indian',
+                            price: '₹1,500 for two',
+                            rating: '4.6'
+                        },
+                        {
+                            name: 'Suvarna Mahal',
+                            image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/2a/ba/83/suvarna-mahal-royal-indian.jpg?w=1000&h=600&s=1',
+                            cuisine: 'Rajasthani, Street Food',
+                            price: '₹₹3,650 for two',
+                            rating: '4.9'
+                        },
+                        {
+                            name: 'Tapri Central',
+                            image: 'https://content.jdmagicbox.com/comp/jaipur/c4/0141px141.x141.190825020711.s2c4/catalogue/tapri-chotu-c-scheme-jaipur-coffee-shops-zfiu4ccy07.jpg?w=3840&q=75S',
+                            cuisine: 'Continental, Cafe',
+                            price: '₹900 for two',
+                            rating: '4.3'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Rambagh Palace',
+                            image: 'https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/https://www.cfmedia.vfmleonardo.com/imageRepo/2/0/67/917/590/Rambagh_Palace_-_Exterior_4_O/Rambagh-Palace-Hotel-Exterior.jpg?tr=w-656,h-390,fo-auto',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', '3 Restaurants', 'Gym'],
+                            price: '₹30,000 per night',
+                            rating: '4.9'
+                        },
+                        {
+                            name: 'Fairmont Jaipur',
+                            image: 'https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/https://www.cfmedia.vfmleonardo.com/imageRepo/6/0/99/976/66/a5g0_ho_00_p_3000x2250_O/Fairmont-Jaipur-Exterior.jpg?tr=w-656,h-390,fo-auto',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', '4 Restaurants'],
+                            price: '₹15,000 per night',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Hotel Pearl Palace',
+                            image: 'https://www.pearlpalaceheritage.com/images/home-page/pearl-palace-heritage-about-video-1.jpg',
+                            amenities: ['Rooftop Restaurant', 'Free WiFi', 'AC'],
+                            price: '₹4,000 per night',
+                            rating: '4.1'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Vikram Singh',
+                            rating: '5',
+                            date: '5 Mar 2023',
+                            content: 'Jaipur is a magical city with so much history and culture. The forts and palaces are breathtaking!'
+                        },
+                        {
+                            author: 'Ananya Reddy',
+                            rating: '4',
+                            date: '20 Feb 2023',
+                            content: 'Loved the shopping and food in Jaipur. The colors and vibrancy of the city are unforgettable.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'varanasi',
+                name: 'Varanasi',
+                image: 'https://lp-cms-production.imgix.net/2019-06/e28fe554c117692d4374c0e9df3d3123-man-mandir-ghat.jpg?fit=crop&ar=1:1&w=1200&auto=format&q=75',
+                description: 'The spiritual capital of India on the banks of the Ganges.',
+                tags: ['Spiritual', 'Cultural', 'Historical'],
+                details: {
+                    description: 'Varanasi, also known as Benares or Kashi, is one of the world\'s oldest continually inhabited cities and India\'s spiritual capital. Situated on the banks of the sacred Ganges River, Varanasi is a major pilgrimage center for Hindus who come to bathe in the river and perform funeral rites. The city is famous for its ghats (steps leading to the river), temples, and narrow winding lanes full of shops selling religious items, silk saris, and handicrafts.',
+                    location: 'Uttar Pradesh, India',
+                    highlights: [
+                        'Experience the Ganga Aarti ceremony at Dashashwamedh Ghat',
+                        'Take a boat ride on the Ganges at sunrise',
+                        'Visit the Kashi Vishwanath Temple',
+                        'Explore Sarnath, where Buddha gave his first sermon',
+                        'Walk through the old city\'s narrow lanes'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Dashashwamedh Ghat',
+                            image: 'https://kashiyatra.in/wp-content/uploads/2023/10/dashashwamedh-ghat-evening-ganga-aarti.jpg',
+                            description: 'The main ghat where the spectacular Ganga Aarti ceremony takes place every evening.',
+                            price: 'Free (boat rides extra)'
+                        },
+                        {
+                            name: 'Kashi Vishwanath Temple',
+                            image: 'https://lp-cms-production.imgix.net/2019-06/d63fd3a14b86285b3d10ed94b773dae5-benares-hindu-university.jpg?fit=crop&ar=1:1&w=1200&auto=format&q=75',
+                            description: 'One of the most famous Hindu temples dedicated to Lord Shiva.',
+                            price: 'Free (security restrictions apply)'
+                        },
+                        {
+                            name: 'Sarnath',
+                            image: 'https://www.agoda.com/wp-content/uploads/2023/10/7-Archaeological-Buddhist-Complex-Sarnath-India-Buddhist-Circuit.jpg',
+                            description: 'A Buddhist pilgrimage site where Buddha delivered his first sermon.',
+                            price: '₹300 (foreigners), ₹25 (Indians)'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Brown Bread Bakery',
+                            image: 'https://q-xx.bstatic.com/xdata/images/hotel/max700/143276658.jpg?k=e942bc6d7b9410f7257fc717014c174e0c09419cdfcd28263f8aeb93ad95ef47&o=',
+                            cuisine: 'Continental, Bakery',
+                            price: '₹800 for two',
+                            rating: '4.4'
+                        },
+                        {
+                            name: 'Pizzeria Vaatika Cafe',
+                            image: 'https://content.jdmagicbox.com/comp/varanasi/c4/0542px542.x542.090727154620.w6c4/catalogue/pizzeria-vaatika-cafe-varanasi-indian-restaurants-ipnoefepab.jpg?w=3840&q=75',
+                            cuisine: 'Italian, Cafe',
+                            price: '₹900 for two',
+                            rating: '4.3'
+                        },
+                        {
+                            name: 'Deena Chaat Bhandar',
+                            image: 'https://content.jdmagicbox.com/comp/varanasi/dc/0542px542.x542.100117174240.w9b8dc/catalogue/deena-chat-bhandar-rama-pura-varanasi-fast-food-0jlhyrmpml.jpg?w=3840&q=75',
+                            cuisine: 'Street Food, North Indian',
+                            price: '₹300 for two',
+                            rating: '4.5'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Taj Ganges, Varanasi',
+                            image: 'https://content.jdmagicbox.com/comp/varanasi/a6/0542px542.x542.190710130828.l9a6/catalogue/taj-ganges-nadesar-varanasi-5-star-hotels-0fio0yzokr.jpg?w=3840&q=75',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', 'Restaurant'],
+                            price: '₹12,000 per night',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'BrijRama Palace',
+                            image: 'https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/http://images.ntmllc.com/v4/hotel/U76/U76385/U76385_LOB_Z1D879/BrijRama-Palace-Varanasi-Lobby.JPG?tr=w-434,h-190,fo-auto',
+                            amenities: ['Heritage Property', 'Free WiFi', 'Restaurant', 'River View'],
+                            price: '₹18,000 per night',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Hotel Surya',
+                            image: 'https://surya-hotel.hotels-varanasi.com/data/Photos/1920x1080w/10974/1097477/1097477835.JPEG',
+                            amenities: ['Free WiFi', 'Restaurant', 'AC'],
+                            price: '₹5,000 per night',
+                            rating: '4.0'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Deepak Joshi',
+                            rating: '5',
+                            date: '8 Mar 2023',
+                            content: 'Varanasi is an experience like no other. The spiritual energy is palpable. The Ganga Aarti is mesmerizing.'
+                        },
+                        {
+                            author: 'Meera Patel',
+                            rating: '4',
+                            date: '25 Feb 2023',
+                            content: 'A city that awakens all your senses. The ghats, the temples, the food - everything is unforgettable.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'mumbai',
+                name: 'Mumbai',
+                image: 'https://t4.ftcdn.net/jpg/01/21/42/59/360_F_121425935_SWF7t7n26n8JAzjUaHVS4vfd4u0wIkea.jpg',
+                description: 'The bustling financial capital with Bollywood glamour.',
+                tags: ['Urban', 'Shopping', 'Nightlife'],
+                details: {
+                    description: 'Mumbai (formerly Bombay) is a densely populated city on India\'s west coast, the country\'s financial and entertainment capital. It\'s home to the Bollywood film industry and features Victorian-era architecture like the Chhatrapati Shivaji Terminus. The city has a natural deep-water harbor and is famous for landmarks like the Gateway of India, Marine Drive, and the Elephanta Caves. Mumbai offers a vibrant mix of cultures, cuisines, and lifestyles, from luxurious skyscrapers to sprawling slums.',
+                    location: 'Maharashtra, India',
+                    highlights: [
+                        'See the Gateway of India and Taj Mahal Palace Hotel',
+                        'Explore Colaba and Marine Drive',
+                        'Visit Elephanta Caves (UNESCO site)',
+                        'Experience Bollywood at Film City',
+                        'Shop at Chor Bazaar and Fashion Street'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Gateway of India',
+                            image: 'https://t3.ftcdn.net/jpg/00/48/24/12/360_F_48241282_uwLlLOlrmZOIAd122JcT55SDoLXx7eXr.jpg',
+                            description: 'An iconic arch monument built during the British Raj, overlooking the Arabian Sea.',
+                            price: 'Free'
+                        },
+                        {
+                            name: 'Elephanta Caves',
+                            image: 'https://www.wandersmiles.com/wp-content/uploads/2019/10/Cannon-Hill-Caves-at-Elephanta-in-Mumbai.jpg',
+                            description: 'A UNESCO World Heritage Site with rock-cut cave temples dedicated to Shiva.',
+                            price: '₹600 (foreigners), ₹40 (Indians) + boat ride'
+                        },
+                        {
+                            name: 'Chhatrapati Shivaji Maharaj Vastu Sangrahalaya',
+                            image: 'https://media.gettyimages.com/id/555879423/photo/chatrapati-shivaji-maharaj-vastu-sangrahalaya-prince-of-wales-museum-of-western-india-mumbai.jpg?s=612x612&w=0&k=20&c=HRLkwNmFPdcCw1j7HFpk2wIV7n5rTAo_qt8aafplTvM=',
+                            description: 'Formerly Prince of Wales Museum, showcasing Indian art and artifacts.',
+                            price: '₹500 (foreigners), ₹100 (Indians)'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Bombay Canteen',
+                            image: 'https://images.squarespace-cdn.com/content/v1/5ef8b1f3256fcf3774ed779f/1593798933961-1NNS7URQQRYPFIR93OUM/The+Bombay+Canteen_renovated+(2).JPG',
+                            cuisine: 'Indian Contemporary',
+                            price: '₹2,000 for two',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Leopold Cafe',
+                            image: 'https://cdn1.tripoto.com/media/filter/nl/img/2380291/Image/1707204723_leopold_cafe_bar_colaba_causeway_mumbai_1580291746.jpg.webp',
+                            cuisine: 'Continental, Cafe',
+                            price: '₹1,500 for two',
+                            rating: '4.3'
+                        },
+                        {
+                            name: 'Trishna',
+                            image: 'https://content.jdmagicbox.com/v2/comp/mumbai/91/022pne07391/catalogue/trishna-restaurant-and-bar-fort-mumbai-sea-food-restaurants-t0xlhhcsj2.jpg?w=3840&q=75',
+                            cuisine: 'Seafood, Coastal',
+                            price: '₹1,800 for two',
+                            rating: '4.5'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Taj Mahal Palace',
+                            image: 'https://secure.s.forbestravelguide.com/img/properties/the-taj-mahal-palace-mumbai/the-taj-mahal-palace-ballroom2.jpg',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', '5 Restaurants', 'Gym'],
+                            price: '₹25,000 per night',
+                            rating: '4.9'
+                        },
+                        {
+                            name: 'The St. Regis Mumbai',
+                            image: 'https://www.kayak.com/rimg/himg/44/b5/8a/leonardo-832019-147794316-156676.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', '3 Restaurants'],
+                            price: '₹20,000 per night',
+                            rating: '4.8'
+                        },
+                        {
+                            name: 'Hotel Suba Palace',
+                            image: 'https://media.easemytrip.com/media/hotel/shl-22041615255563/common/commontd5z08.jpg',
+                            amenities: ['Free WiFi', 'Restaurant', 'AC'],
+                            price: '₹6,000 per night',
+                            rating: '4.0'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Riya Kapoor',
+                            rating: '5',
+                            date: '12 Mar 2023',
+                            content: 'Mumbai is the city of dreams! The energy is incredible, and there\'s always something to do.'
+                        },
+                        {
+                            author: 'Aditya Verma',
+                            rating: '4',
+                            date: '3 Mar 2023',
+                            content: 'Love the food and nightlife in Mumbai. The traffic can be overwhelming though.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'kerala',
+                name: 'Kerala',
+                image: 'https://media.gettyimages.com/id/97574685/photo/houseboat-on-kerala-backwaters-in-india.jpg?s=612x612&w=0&k=20&c=CNEqXJSghDLaN95j6kIJ-fwoMswiamNees0s7LrJQKU=',
+                description: 'God\'s Own Country with backwaters and lush greenery.',
+                tags: ['Backwaters', 'Nature', 'Ayurveda'],
+                details: {
+                    description: 'Kerala, a state on India\'s tropical Malabar Coast, is known for its palm-lined beaches and backwaters, a network of canals. The Western Ghats, mountains whose slopes support tea, coffee and spice plantations as well as wildlife, are dotted with national parks like Periyar and Eravikulam. Kerala is often called "God\'s Own Country" for its natural beauty, Ayurvedic treatments, and unique cultural heritage. The state is also known for its traditional Kathakali dance and martial art form Kalaripayattu.',
+                    location: 'South India',
+                    highlights: [
+                        'Cruise the backwaters on a traditional houseboat',
+                        'Experience an Ayurvedic treatment',
+                        'Visit tea plantations in Munnar',
+                        'See wildlife in Periyar National Park',
+                        'Relax on beaches like Kovalam and Varkala'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Alleppey Backwaters',
+                            image: 'https://blog.thomascook.in/wp-content/uploads/2017/07/Untitled-design.jpg',
+                            description: 'A network of canals, lakes and lagoons best explored on a traditional houseboat.',
+                            price: '₹8,000-15,000 for houseboat (overnight)'
+                        },
+                        {
+                            name: 'Munnar Tea Gardens',
+                            image: 'https://munnartourism.co.in/images/places-to-visit/headers/kolukkumalai-tea-estate-munnar-tourism-entry-fee-timings-holidays-reviews-header.jpg',
+                            description: 'Rolling hills covered with tea plantations as far as the eye can see.',
+                            price: '₹200-500 for plantation tours'
+                        },
+                        {
+                            name: 'Periyar Wildlife Sanctuary',
+                            image: 'https://www.southindiatoursandtravels.com/SittPhotos/Kerala/Periyar-Wildlife-Sanctuary/Periyar-3.jpg',
+                            description: 'A tiger reserve where you can spot elephants, tigers and more on boat safaris.',
+                            price: '₹500 (foreigners), ₹50 (Indians)'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Grand Hotel',
+                            image: 'https://grand.kerala-hotels.net/data/Imgs/1920x1080w/15807/1580787/1580787979/img-grand-hotel-kochi-1.JPEG',
+                            cuisine: 'Kerala, Seafood',
+                            price: '₹1,200 for two',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'The Rice Boat',
+                            image: 'https://restaurantindia.s3.ap-south-1.amazonaws.com/s3fs-public/content8578.jpg',
+                            cuisine: 'Kerala, Coastal',
+                            price: '₹1,800 for two',
+                            rating: '4.6'
+                        },
+                        {
+                            name: 'Malabar Junction',
+                            image: 'https://i0.wp.com/myannoyingopinions.com/wp-content/uploads/2017/04/malabar-junction.jpg?w=576&h=432&ssl=1',
+                            cuisine: 'Kerala, International',
+                            price: '₹1,500 for two',
+                            rating: '4.4'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Taj Bekal Resort & Spa',
+                            image: 'https://content.r9cdn.net/rimg/himg/d7/ec/b5/leonardo-1268935-Bekal_Facade_O-129886.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Pool', 'Spa', 'Free WiFi', 'Beach Access', 'Restaurant'],
+                            price: '₹20,000 per night',
+                            rating: '4.8'
+                        },
+                        {
+                            name: 'Spice Tree Munnar',
+                            image: 'https://media.audleytravel.com/-/media/images/home/indian-subcontinent/india/accommodation/superhotels/hd-letterboxes/spice_tree_munnar_16008613_3000x1000.jpg?q=79&w=1920&h=685',
+                            amenities: ['Mountain View', 'Free WiFi', 'Restaurant', 'Garden'],
+                            price: '₹10,000 per night',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Palm Grove Lake Resort',
+                            image: 'https://img.traveltriangle.com/cms/attachments/pictures/1110818/original/palm_grove_resort_udupi.jpg?tr=w-606,h-400',
+                            amenities: ['Backwater View', 'Free WiFi', 'Restaurant', 'AC'],
+                            price: '₹7,000 per night',
+                            rating: '4.2'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Nandini Nair',
+                            rating: '5',
+                            date: '18 Mar 2023',
+                            content: 'Kerala is paradise! The backwaters are so peaceful, and the food is amazing. Highly recommend the houseboat experience.'
+                        },
+                        {
+                            author: 'Rahul Menon',
+                            rating: '4',
+                            date: '9 Mar 2023',
+                            content: 'Beautiful landscapes and friendly people. The Ayurvedic massage was rejuvenating.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'shimla',
+                name: 'Shimla',
+                image: 'https://media.gettyimages.com/id/575731883/photo/morning-view-of-shimla.jpg?s=612x612&w=0&k=20&c=EhMP7tMqu5RYwXzdHYWy_mrt5Z0gAmZwmWrKtz9JaiA=',
+                description: 'The queen of hill stations with colonial charm.',
+                tags: ['Hill Station', 'Colonial', 'Nature'],
+                details: {
+                    description: 'Shimla is the capital of the northern Indian state of Himachal Pradesh, in the Himalayan foothills. Once the summer capital of British India, it remains a popular hill station with colonial-era architecture like the Viceregal Lodge and Christ Church. The Mall Road, a pedestrian-only shopping area, and the Ridge, a large open space with panoramic views, are popular gathering spots. Shimla offers cool mountain air, scenic views, and access to nearby trekking areas like Kufri and Chail.',
+                    location: 'Himachal Pradesh, India',
+                    highlights: [
+                        'Walk along the historic Mall Road',
+                        'Visit the Viceregal Lodge and Christ Church',
+                        'Take the toy train to Kalka (UNESCO)',
+                        'Go trekking in nearby Kufri or Chail',
+                        'Enjoy panoramic views from the Ridge'
+                    ],
+                    attractions: [
+                        {
+                            name: 'The Ridge',
+                            image: 'https://visitplacesindia.com/wp-content/uploads/2024/11/theridge-shimla.jpg',
+                            description: 'A large open space in the heart of Shimla offering panoramic views of the mountains.',
+                            price: 'Free'
+                        },
+                        {
+                            name: 'Kalka-Shimla Toy Train',
+                            image: 'https://img.veenaworld.com/wp-content/uploads/2023/06/Kalka-Shimla-Toy-Train-A-Majestic-Journey-amidst-Beautiful-Landscape.jpg?imwidth=1300',
+                            description: 'A UNESCO World Heritage narrow-gauge railway with breathtaking mountain views.',
+                            price: '₹400-1,200 depending on class'
+                        },
+                        {
+                            name: 'Viceregal Lodge',
+                            image: 'https://hblimg.mmtcdn.com/content/hubble/img/shimla/mmt/activities/m_activities_Shimla_Viceregal%20Lodge_l_372_651.jpg',
+                            description: 'Former summer residence of the British Viceroy, now a research institute.',
+                            price: '₹50 per person'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Wake and Bake',
+                            image: 'https://www.connectingtraveller.com/images/localtip/1626721216wakeandbake2.jpg',
+                            cuisine: 'Continental, Cafe',
+                            price: '₹1,000 for two',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Himachali Rasoi',
+                            image: 'https://tickereatstheworld.com/wp-content/uploads/2023/10/Cafe-Valley-Vue.jpg',
+                            cuisine: 'Himachali, North Indian',
+                            price: '₹800 for two',
+                            rating: '4.4'
+                        },
+                        {
+                            name: 'Cecil Restaurant',
+                            image: 'https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-cecil-shimla/dining/detail/toce-the-restaurant-724x407.jpg?w=724&extension=webp&hash=d9942a98e38c44277ea780c4f6631b8c0',
+                            cuisine: 'Multi-cuisine',
+                            price: '₹1,500 for two',
+                            rating: '4.3'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Oberoi Cecil',
+                            image: 'https://www.kayak.com/rimg/himg/05/a3/1b/leonardo-2671606-IMG_5999_O-666303.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Heritage Property', 'Spa', 'Free WiFi', 'Restaurant', 'Gym'],
+                            price: '₹18,000 per night',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Radisson Hotel Shimla',
+                            image: 'https://content.r9cdn.net/rimg/himg/c9/41/fe/ice-105290-511fa0-982702.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Mountain View', 'Free WiFi', 'Restaurant', 'Bar'],
+                            price: '₹12,000 per night',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Hotel Willow Banks',
+                            image: 'https://content.jdmagicbox.com/comp/shimla/d7/0177px177.x177.110406184501.a8d7/catalogue/willow-banks-hotel-shimla-east-shimla-4-star-hotels-j7xvhcts2z.jpg?w=3840&q=75',
+                            amenities: ['Mountain View', 'Free WiFi', 'Restaurant'],
+                            price: '₹6,000 per night',
+                            rating: '4.1'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Priya Malhotra',
+                            rating: '5',
+                            date: '22 Mar 2023',
+                            content: 'Shimla is so charming with its colonial buildings and cool weather. The toy train ride was magical!'
+                        },
+                        {
+                            author: 'Rohit Khanna',
+                            rating: '4',
+                            date: '15 Mar 2023',
+                            content: 'Beautiful hill station with great views. Mall Road gets crowded but has nice shops and cafes.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'darjeeling',
+                name: 'Darjeeling',
+                image: 'https://t3.ftcdn.net/jpg/01/60/50/54/360_F_160505445_IdhngC3UPQ2nV1G91LV6HrNeMvMmOvoW.jpg',
+                description: 'Famous for its tea gardens and Himalayan views.',
+                tags: ['Hill Station', 'Tea Gardens', 'Nature'],
+                details: {
+                    description: 'Darjeeling is a town in India\'s West Bengal state, in the Himalayan foothills. It\'s famed for its distinctive black tea and the Darjeeling Himalayan Railway, a UNESCO World Heritage Site. The town is known for its views of Kangchenjunga, the world\'s third-highest mountain, and for Tiger Hill, a summit that\'s popular at sunrise for its panoramic views. Colonial architecture, Buddhist monasteries, and vibrant markets add to Darjeeling\'s charm, making it a popular hill station retreat.',
+                    location: 'West Bengal, India',
+                    highlights: [
+                        'Watch sunrise over Kangchenjunga from Tiger Hill',
+                        'Ride the Darjeeling Himalayan Toy Train',
+                        'Visit tea plantations and learn about tea production',
+                        'Explore Buddhist monasteries like Ghoom',
+                        'Walk through the colonial-era Mall and Chowrasta'
+                    ],
+                    attractions: [
+                        {
+                            name: 'Tiger Hill',
+                            image: 'https://t4.ftcdn.net/jpg/09/56/47/11/360_F_956471139_gkCDcmzbAUWKAHvxVY9iaV4jVKyakT2k.jpg',
+                            description: 'Famous viewpoint to see sunrise over Kangchenjunga and Everest.',
+                            price: '₹100 per person'
+                        },
+                        {
+                            name: 'Darjeeling Himalayan Railway',
+                            image: 'https://media.gettyimages.com/id/170963926/photo/darjeeling-himalayan-railway-train-standing-at-batasia-loop-darjeeling-west-bengal-india.jpg?s=612x612&w=0&k=20&c=WwTVn3bvz0XUNE3cp6sChUx4HosMCjGJ8Veeh89_Xuo=',
+                            description: 'UNESCO-listed narrow-gauge steam railway running through the mountains.',
+                            price: '₹300-1,000 depending on class'
+                        },
+                        {
+                            name: 'Happy Valley Tea Estate',
+                            image:'https://www.trawell.in/admin/images/upload/646902927Darjeeling_Happy_Valley_Tea_Estate_Main.jpg',
+                            description: 'One of Darjeeling\'s oldest tea gardens offering tours and tastings.',
+                            price: '₹200 per person'
+                        }
+                    ],
+                    restaurants: [
+                        {
+                            name: 'Glenary\'s',
+                            image: 'https://assets.telegraphindia.com/telegraph/2022/Sep/1663959622_glenarys.jpg',
+                            cuisine: 'Bakery, Continental',
+                            price: '₹1,000 for two',
+                            rating: '4.5'
+                        },
+                        {
+                            name: 'Kunga Restaurant',
+                            image: 'https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2020/02/Joeys-Pub-Restaurant-Darjeeling.jpg?resize=800,533&ssl=1',
+                            cuisine: 'Tibetan, Chinese',
+                            price: '₹800 for two',
+                            rating: '4.4'
+                        },
+                        {
+                            name: 'Sonam\'s Kitchen',
+                            image: 'https://content.jdmagicbox.com/comp/dehradun/q2/9999px135.x135.190315024328.t3q2/catalogue/sonam-kitchen-rajpur-road-dehradun-restaurants-o1kk8pqdso.jpg?w=3840&q=75',
+                            cuisine: 'Continental, Breakfast',
+                            price: '₹700 for two',
+                            rating: '4.6'
+                        }
+                    ],
+                    hotels: [
+                        {
+                            name: 'Mayfair Darjeeling',
+                            image: 'https://content.r9cdn.net/rimg/himg/7c/17/7d/expedia_group-130512-30fd9c-413952.jpg?width=1366&height=768&crop=true',
+                            amenities: ['Heritage Property', 'Spa', 'Free WiFi', 'Restaurant', 'Mountain View'],
+                            price: '₹15,000 per night',
+                            rating: '4.7'
+                        },
+                        {
+                            name: 'Windamere Hotel',
+                            image: 'https://www.wildfrontierstravel.com/media/cache/driver/upload/mirror/dhruv-wildfrontierstravel-com/07d72983_ColonialTinkerBellesCottagefullbungalowwithkitchendiningandconservatoryareas.jpeg',
+                            amenities: ['Heritage Property', 'Free WiFi', 'Restaurant', 'Garden'],
+                            price: '₹10,000 per night',
+                            rating: '4.6'
+                        },
+                        {
+                            name: 'Cedar Inn',
+                            image: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/198820928.jpg?k=bc94e328ed1d4a45cbd6bbb271f8a7b0432321aa9500cb4a489cd5f20d1ab5c5&o=&hp=1',
+                            amenities: ['Mountain View', 'Free WiFi', 'Restaurant'],
+                            price: '₹6,000 per night',
+                            rating: '4.2'
+                        }
+                    ],
+                    reviews: [
+                        {
+                            author: 'Anjali Basu',
+                            rating: '5',
+                            date: '28 Mar 2023',
+                            content: 'Darjeeling is magical! The tea gardens, the toy train, the mountain views - everything was perfect.'
+                        },
+                        {
+                            author: 'Siddharth Roy',
+                            rating: '4',
+                            date: '20 Mar 2023',
+                            content: 'Loved the cool weather and colonial charm. The sunrise at Tiger Hill was worth the early wake-up.'
+                        }
+                    ]
+                }
+            }
+        ];
+
+        // Quiz questions
+        const quizQuestions = [
+            {
+                question: "Which of these Indian cities is known as the 'Pink City'?",
+                options: ["Agra", "Jaipur", "Mumbai", "Kolkata"],
+                answer: 1
+            },
+            {
+                question: "The famous Taj Mahal is located in which Indian city?",
+                options: ["Delhi", "Jaipur", "Agra", "Varanasi"],
+                answer: 2
+            },
+            {
+                question: "Which Indian destination is famous for its backwaters?",
+                options: ["Goa", "Kerala", "Andaman", "Pondicherry"],
+                answer: 1
+            },
+            {
+                question: "The Ganga Aarti ceremony is a major attraction in which city?",
+                options: ["Varanasi", "Haridwar", "Rishikesh", "All of the above"],
+                answer: 3
+            },
+            {
+                question: "Which of these is a UNESCO World Heritage toy train route in India?",
+                options: ["Darjeeling Himalayan Railway", "Nilgiri Mountain Railway", "Kalka-Shimla Railway", "All of the above"],
+                answer: 3
+            }
+        ];
+
+        // Current quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let quizActive = false;
+
+        // Initialize the website
+        function init() {
+            // Create particles for door
+            createParticles();
+            
+            // Set current date for planner
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('startDate').valueAsDate = today;
+            document.getElementById('endDate').valueAsDate = tomorrow;
+            
+            // Event listeners
+            enterBtn.addEventListener('click', enterWebsite);
+            doorContainer.addEventListener('click', toggleDoor);
+            homeLink.addEventListener('click', showHome);
+            destinationsLink.addEventListener('click', showDestinations);
+            plannerLink.addEventListener('click', showPlanner);
+            quizLink.addEventListener('click', startQuiz);
+            weatherLink.addEventListener('click', toggleWeather);
+            weatherClose.addEventListener('click', toggleWeather);
+            soundControl.addEventListener('click', toggleSound);
+            easterEgg.addEventListener('click', showEgg);
+            eggClose.addEventListener('click', hideEgg);
+            quizClose.addEventListener('click', closeQuiz);
+            quizNext.addEventListener('click', nextQuestion);
+            quizRestart.addEventListener('click', restartQuiz);
+            
+            document.getElementById('generateItinerary').addEventListener('click', generateItinerary);
+            
+            // Autoplay background music (muted by default due to browser policies)
+            backgroundMusic.muted = true;
+            backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+            
+            // Show welcome popup
+            welcomePopup.classList.remove('hidden');
+        }
+
+        // Create particles for door animation
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 5 + 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                doorParticles.appendChild(particle);
+            }
+        }
+
+        // Enter the website (close welcome popup)
+        function enterWebsite() {
+            welcomeSound.play();
+            welcomePopup.classList.add('hidden');
+            setTimeout(() => {
+                mainContent.style.display = 'block';
+                backgroundMusic.muted = false;
+                backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+            }, 1000);
+        }
+
+        // Toggle the door open/closed
+        function toggleDoor() {
+            if (door.classList.contains('open')) {
+                door.classList.remove('open');
+                destinationsGrid.classList.remove('visible');
+                setTimeout(() => {
+                    destinationsGrid.style.display = 'none';
+                }, 500);
+                doorSound.play();
+            } else {
+                door.classList.add('open');
+                setTimeout(() => {
+                    destinationsGrid.style.display = 'grid';
+                    setTimeout(() => {
+                        destinationsGrid.classList.add('visible');
+                        loadDestinations();
+                        doorSound.play();
+                    }, 50);
+                }, 500);
+            }
+        }
+
+        // Load destinations into grid
+        function loadDestinations() {
+            destinationsGrid.innerHTML = '';
+            
+            destinations.forEach(destination => {
+                const card = document.createElement('div');
+                card.classList.add('destination-card', 'float-up');
+                card.dataset.id = destination.id;
+                
+                card.innerHTML = `
+                    <img src="${destination.image}" alt="${destination.name}" class="destination-image">
+                    <div class="destination-info">
+                        <h3 class="destination-name">${destination.name}</h3>
+                        <p class="destination-description">${destination.description}</p>
+                        <div>
+                            ${destination.tags.map(tag => `<span class="destination-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => showDestination(destination.id));
+                destinationsGrid.appendChild(card);
+                
+                // Random delay for float-up animation
+                card.style.animationDelay = `${Math.random() * 0.5}s`;
+            });
+        }
+
+        // Show destination details
+        function showDestination(id) {
+            const destination = destinations.find(d => d.id === id);
+            if (!destination) return;
+            
+            // Play destination sound
+            stopAllDestinationSounds();
+            const sound = document.getElementById(`${id}Sound`);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play();
+            }
+            
+            // Hide other sections
+            homeSection.style.display = 'none';
+            destinationsGrid.style.display = 'none';
+            plannerSection.style.display = 'none';
+            
+            // Show destination details
+            destinationDetails.innerHTML = `
+                <button class="back-button" id="backButton"><i class="fas fa-arrow-left"></i> Back to Destinations</button>
+                
+                <div class="detail-header">
+                    <img src="${destination.image}" alt="${destination.name}" class="detail-image">
+                    <div class="detail-info">
+                        <h1 class="detail-title">${destination.name}</h1>
+                        <div class="detail-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${destination.details.location}</span>
+                        </div>
+                        <p class="detail-description">${destination.details.description}</p>
+                        
+                        <div class="detail-highlights">
+                            <h3 class="highlight-title">Highlights</h3>
+                            <ul class="highlight-list">
+                                ${destination.details.highlights.map(highlight => `<li>${highlight}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-tabs">
+                    <button class="tab-button active" data-tab="attractions">Attractions</button>
+                    <button class="tab-button" data-tab="restaurants">Restaurants</button>
+                    <button class="tab-button" data-tab="hotels">Hotels</button>
+                    <button class="tab-button" data-tab="reviews">Reviews</button>
+                </div>
+                
+                <div class="tab-content active" id="attractions">
+                    <h3 class="highlight-title">Top Attractions</h3>
+                    <div class="attractions-grid">
+                        ${destination.details.attractions.map(attraction => `
+                            <div class="attraction-card">
+                                <img src="${attraction.image}" alt="${attraction.name}" class="attraction-image">
+                                <div class="attraction-info">
+                                    <h4 class="attraction-name">${attraction.name}</h4>
+                                    <p class="attraction-description">${attraction.description}</p>
+                                    <div class="attraction-price">Entry: ${attraction.price}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="restaurants">
+                    <h3 class="highlight-title">Best Restaurants</h3>
+                    ${destination.details.restaurants.map(restaurant => `
+                        <div class="restaurant-card">
+                            <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image">
+                            <div class="restaurant-info">
+                                <h4 class="restaurant-name">${restaurant.name}</h4>
+                                <p class="restaurant-cuisine">${restaurant.cuisine}</p>
+                                <p class="restaurant-price">Average cost: ${restaurant.price}</p>
+                                <div class="restaurant-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${restaurant.rating}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="tab-content" id="hotels">
+                    <h3 class="highlight-title">Recommended Hotels</h3>
+                    ${destination.details.hotels.map(hotel => `
+                        <div class="hotel-card">
+                            <img src="${hotel.image}" alt="${hotel.name}" class="hotel-image">
+                            <div class="hotel-info">
+                                <h4 class="hotel-name">${hotel.name}</h4>
+                                <div class="hotel-amenities">
+                                    ${hotel.amenities.map(amenity => `<span class="amenity">${amenity}</span>`).join('')}
+                                </div>
+                                <p class="hotel-price">${hotel.price}</p>
+                                <button class="book-button">Book Now</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="tab-content" id="reviews">
+                    <div class="reviews-container">
+                        ${destination.details.reviews.map(review => `
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <span class="review-author">${review.author}</span>
+                                    <span class="review-rating">
+                                        ${'★'.repeat(parseInt(review.rating))}${'☆'.repeat(5 - parseInt(review.rating))}
+                                    </span>
+                                </div>
+                                <div class="review-date">${review.date}</div>
+                                <p class="review-content">${review.content}</p>
+                            </div>
+                        `).join('')}
+                        
+                        <div class="add-review">
+                            <h3 class="review-title">Add Your Review</h3>
+                            <form class="review-form">
+                                <div class="form-group">
+                                    <label class="form-label">Your Name</label>
+                                    <input type="text" class="form-input" id="reviewName">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Rating</label>
+                                    <select class="form-select" id="reviewRating">
+                                        <option value="5">★★★★★</option>
+                                        <option value="4">★★★★☆</option>
+                                        <option value="3">★★★☆☆</option>
+                                        <option value="2">★★☆☆☆</option>
+                                        <option value="1">★☆☆☆☆</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Your Review</label>
+                                    <textarea class="review-textarea" id="reviewText"></textarea>
+                                </div>
+                                <button type="button" class="submit-review">Submit Review</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show destination details
+            destinationDetails.style.display = 'block';
+            setTimeout(() => {
+                destinationDetails.classList.add('visible');
+            }, 50);
+            
+            // Add event listeners for tabs
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding tab
+                    button.classList.add('active');
+                    const tabId = button.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Back button event listener
+            document.getElementById('backButton').addEventListener('click', () => {
+                stopAllDestinationSounds();
+                destinationDetails.classList.remove('visible');
+                setTimeout(() => {
+                    destinationDetails.style.display = 'none';
+                    destinationsGrid.style.display = 'grid';
+                    destinationsGrid.classList.add('visible');
+                }, 500);
+            });
+        }
+
+        // Stop all destination sounds
+        function stopAllDestinationSounds() {
+            const sounds = [
+                agraSound, goaSound, jaipurSound, varanasiSound, 
+                mumbaiSound, keralaSound, shimlaSound, darjeelingSound
+            ];
+            
+            sounds.forEach(sound => {
+                sound.pause();
+                sound.currentTime = 0;
+            });
+        }
+
+        // Show home section
+        function showHome() {
+            stopAllDestinationSounds();
+            destinationDetails.classList.remove('visible');
+            destinationsGrid.classList.remove('visible');
+            plannerSection.style.display = 'none';
+            
+            setTimeout(() => {
+                destinationDetails.style.display = 'none';
+                destinationsGrid.style.display = 'none';
+                homeSection.style.display = 'block';
+            }, 500);
+        }
+
+        // Show destinations grid
+        function showDestinations() {
+            stopAllDestinationSounds();
+            destinationDetails.classList.remove('visible');
+            homeSection.style.display = 'none';
+            plannerSection.style.display = 'none';
+            
+            setTimeout(() => {
+                destinationDetails.style.display = 'none';
+                destinationsGrid.style.display = 'grid';
+                setTimeout(() => {
+                    destinationsGrid.classList.add('visible');
+                }, 50);
+            }, 500);
+        }
+
+        // Show itinerary planner
+        function showPlanner() {
+            stopAllDestinationSounds();
+            destinationDetails.classList.remove('visible');
+            destinationsGrid.classList.remove('visible');
+            homeSection.style.display = 'none';
+            
+            setTimeout(() => {
+                destinationDetails.style.display = 'none';
+                destinationsGrid.style.display = 'none';
+                plannerSection.style.display = 'block';
+            }, 500);
+        }
+
+        // Generate itinerary
+        function generateItinerary() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const budgetRange = document.getElementById('budgetRange').value;
+            const travelType = document.getElementById('travelType').value;
+            const selectedDestinations = Array.from(document.getElementById('destinationsSelect').selectedOptions)
+                .map(option => option.value);
+                
+            if (selectedDestinations.length === 0) {
+                alert('Please select at least one destination');
+                return;
+            }
+            
+            // Calculate number of days
+            const timeDiff = endDate - startDate;
+            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (daysDiff <= 0) {
+                alert('End date must be after start date');
+                return;
+            }
+            
+            // Generate itinerary
+            const itineraryResult = document.getElementById('itineraryResult');
+            itineraryResult.innerHTML = '';
+            
+            // Calculate days per destination (simple distribution)
+            const daysPerDestination = Math.floor(daysDiff / selectedDestinations.length);
+            let extraDays = daysDiff % selectedDestinations.length;
+            
+            let currentDay = 1;
+            let totalCost = 0;
+            
+            selectedDestinations.forEach(destId => {
+                const destination = destinations.find(d => d.id === destId);
+                if (!destination) return;
+                
+                // Calculate days for this destination
+                let daysHere = daysPerDestination;
+                if (extraDays > 0) {
+                    daysHere++;
+                    extraDays--;
+                }
+                
+                // Calculate cost based on budget range
+                let dailyCost;
+                switch (budgetRange) {
+                    case 'economy':
+                        dailyCost = 3000 + Math.floor(Math.random() * 2000);
+                        break;
+                    case 'mid-range':
+                        dailyCost = 7000 + Math.floor(Math.random() * 3000);
+                        break;
+                    case 'luxury':
+                        dailyCost = 15000 + Math.floor(Math.random() * 10000);
+                        break;
+                }
+                
+                // Adjust for travel type
+                switch (travelType) {
+                    case 'couple':
+                        dailyCost *= 1.5;
+                        break;
+                    case 'family':
+                        dailyCost *= 2;
+                        break;
+                    case 'friends':
+                        dailyCost *= 1.2;
+                        break;
+                }
+                
+                const destCost = Math.round(dailyCost * daysHere);
+                totalCost += destCost;
+                
+                // Create day plan
+                const dayPlan = document.createElement('div');
+                dayPlan.classList.add('day-plan');
+                
+                dayPlan.innerHTML = `
+                    <h3 class="day-title">Days ${currentDay}-${currentDay + daysHere - 1}: ${destination.name}</h3>
+                    <div class="activity">
+                        <div class="activity-time">Morning</div>
+                        <div class="activity-details">
+                            <div class="activity-name">Explore ${destination.details.attractions[0].name}</div>
+                            <p class="activity-description">${destination.details.attractions[0].description}</p>
+                        </div>
+                    </div>
+                    <div class="activity">
+                        <div class="activity-time">Afternoon</div>
+                        <div class="activity-details">
+                            <div class="activity-name">Lunch at ${destination.details.restaurants[0].name}</div>
+                            <p class="activity-description">Enjoy delicious ${destination.details.restaurants[0].cuisine} cuisine</p>
+                        </div>
+                    </div>
+                    <div class="activity">
+                        <div class="activity-time">Evening</div>
+                        <div class="activity-details">
+                            <div class="activity-name">Check in to ${destination.details.hotels[0].name}</div>
+                            <p class="activity-description">${destination.details.hotels[0].amenities.join(', ')}</p>
+                        </div>
+                    </div>
+                `;
+                
+                if (daysHere > 1) {
+                    dayPlan.innerHTML += `
+                        <div class="activity">
+                            <div class="activity-time">Next Day</div>
+                            <div class="activity-details">
+                                <div class="activity-name">Full day exploring ${destination.name}</div>
+                                <p class="activity-description">Visit more attractions like ${destination.details.attractions[1].name} and ${destination.details.attractions[2].name}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                itineraryResult.appendChild(dayPlan);
+                currentDay += daysHere;
+            });
+            
+            // Add header with total cost
+            const header = document.createElement('div');
+            header.classList.add('itinerary-header');
+            header.innerHTML = `
+                <h3 class="itinerary-title">Your ${daysDiff}-Day Itinerary</h3>
+                <div class="itinerary-cost">Estimated Cost: ₹${totalCost.toLocaleString()}</div>
+            `;
+            itineraryResult.insertBefore(header, itineraryResult.firstChild);
+            
+            // Show result
+            itineraryResult.classList.add('visible');
+        }
+
+        // Toggle weather widget
+        function toggleWeather() {
+            if (weatherWidget.style.display === 'block') {
+                weatherWidget.style.display = 'none';
+            } else {
+                weatherWidget.style.display = 'block';
+                
+                // Random weather data for demo
+                const weatherTypes = [
+                    { icon: 'fa-sun', temp: '28°C', desc: 'Sunny' },
+                    { icon: 'fa-cloud', temp: '24°C', desc: 'Cloudy' },
+                    { icon: 'fa-cloud-rain', temp: '22°C', desc: 'Rainy' },
+                    { icon: 'fa-bolt', temp: '26°C', desc: 'Stormy' }
+                ];
+                
+                const randomWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+                
+                document.querySelector('.weather-icon i').className = `fas ${randomWeather.icon}`;
+                document.querySelector('.weather-temp').textContent = randomWeather.temp;
+                document.querySelector('.weather-details div:last-child').textContent = randomWeather.desc;
+            }
+        }
+
+        // Toggle sound on/off
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            
+            if (isSoundOn) {
+                soundControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                backgroundMusic.muted = false;
+            } else {
+                soundControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                backgroundMusic.muted = true;
+                stopAllDestinationSounds();
+            }
+        }
+
+        // Show easter egg
+        function showEgg() {
+            eggModal.classList.add('visible');
+            eggSound.play();
+        }
+
+        // Hide easter egg
+        function hideEgg() {
+            eggModal.classList.remove('visible');
+        }
+
+        // Start quiz
+        function startQuiz() {
+            if (quizActive) {
+                quizContainer.classList.add('visible');
+                return;
+            }
+            
+            quizActive = true;
+            currentQuestion = 0;
+            score = 0;
+            
+            quizContainer.classList.add('visible');
+            quizContent.style.display = 'block';
+            quizResult.style.display = 'none';
+            
+            loadQuestion();
+        }
+
+        // Close quiz
+        function closeQuiz() {
+            quizContainer.classList.remove('visible');
+        }
+
+        // Load quiz question
+        function loadQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                showQuizResult();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            quizQuestion.textContent = question.question;
+            
+            quizOptions.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('quiz-option');
+                button.textContent = option;
+                button.dataset.index = index;
+                button.addEventListener('click', selectAnswer);
+                quizOptions.appendChild(button);
+            });
+            
+            quizNext.style.display = 'none';
+        }
+
+        // Select quiz answer
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const question = quizQuestions[currentQuestion];
+            const correctIndex = question.answer;
+            const selectedIndex = parseInt(selectedButton.dataset.index);
+            
+            // Disable all options
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.disabled = true;
+            });
+            
+            // Mark correct and incorrect answers
+            document.querySelectorAll('.quiz-option').forEach((option, index) => {
+                if (index === correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && selectedIndex !== correctIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Update score if correct
+            if (selectedIndex === correctIndex) {
+                score++;
+            }
+            
+            // Show next button
+            quizNext.style.display = 'block';
+        }
+
+        // Next quiz question
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        // Show quiz result
+        function showQuizResult() {
+            quizContent.style.display = 'none';
+            quizResult.style.display = 'block';
+            
+            resultScore.textContent = `Your Score: ${score}/${quizQuestions.length}`;
+            
+            let resultMessage;
+            const percentage = (score / quizQuestions.length) * 100;
+            
+            if (percentage >= 80) {
+                resultMessage = "Excellent! You're a travel expert!";
+            } else if (percentage >= 60) {
+                resultMessage = "Good job! You know quite a bit about Indian destinations.";
+            } else {
+                resultMessage = "Keep exploring! There's so much more to discover about India.";
+            }
+            
+            resultText.textContent = resultMessage;
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            quizActive = false;
+            startQuiz();
+        }
+
+        // Initialize the website
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
